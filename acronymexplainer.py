@@ -1,7 +1,7 @@
 from google import genai
 import streamlit as st
 
-API_KEY = "AIzaSyDWULBjNaw6WO8tm_w7jKctAiE_WkDjes8"  # replace with your actual API key
+API_KEY =   # replace with your actual API key
 MODEL = "gemini-2.5-flash"  # valid Gemini model
 
 st.title("Acronym and Tone Explainer")
@@ -12,11 +12,10 @@ def ask_gemini():
     if not question.strip():
         st.warning("No input provided. Please enter an acronym.")
         return
-
     try:
         prompt = (
             "You are precise. Provide one definitive answer and explain briefly. "
-            f"Text: {question}\nWhat does it mean as an acronym and tell me the tone?"
+            f"Text: {question}\nWhat does it mean as an acronym and tell me the tone? and slang if any."
         )
 
         response = client.models.generate_content(
@@ -35,4 +34,3 @@ def ask_gemini():
         st.error(f"Server down or API error: {e}")
 
 ask_gemini()
-
