@@ -15,7 +15,7 @@ def ask_gemini():
     try:
         prompt = (
             "You are precise. Provide one definitive answer and explain briefly. "
-            f"Text: {question}\nWhat does it mean as an acronym and tell me the tone? and slang if any."
+            f"Text: {question}\nWhat does it mean as an acronym and tell me the tone? and slang if any. and emojis if any"
         )
 
         response = client.models.generate_content(
