@@ -1,20 +1,14 @@
 import streamlit as st
-import sklearn
-import random
-import os
 from PIL import Image
 import pytesseract
-from pathlib import Path
-st.title("Teen persona Assistant")
-# Path to the Tesseract executable
+from google import genai
+
+# Streamlit title
+st.title("Teen Persona Assistant")
+
+# Path to Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
-# Open an image file
-path=Path("C:/Users/Nivesh Ahluwalia/Downloads/test1.png")
-img = Image.open(path)
-
-text = pytesseract.image_to_string(img)
-
-teen_dictionary = {
+een_dictionary = {
     "SMH": {"meaning": "Shaking my head", "example": "SMH, he still hasn’t replied", "tone": "Annoyed / Frustrated"},
     "LOL": {"meaning": "Laughing out loud", "example": "That meme was so funny LOL", "tone": "Funny / Casual"},
     "LMAO": {"meaning": "Laughing my ass off", "example": "LMAO you’re crazy", "tone": "Hype / Funny"},
@@ -83,29 +77,40 @@ teen_dictionary = {
     "TBF": {"meaning": "To be fair", "example": "TBF that was okay", "tone": "Balanced"},
     
 }
-from google import genai
-API_KEY = "AIzaSyBdwZKn4TF5AKuqfNpFUJlVAVkDXdB-RBI"  # replace with your actual API key
-MODEL = "gemini-2.5-flash"  # valid Gemini model
-client = genai.Client(api_key=API_KEY)
-def ask_gemini():
-    try:
-        prompt = (
-            "You are a helpful assistant which helps people respond to certain scenarios and changes the tone according to the severity of the scenario. "
-            f"Text: {text}\n Provide a possible response to this scenario. Use slangs and acronyms where necessary. "
-            "You can refer to the teen_dictionary for guidance if needed."
-        )
+# File uploader widget
+uploaded_file = st.file_uploader("Upload an image containing text", type=["png", "jpg", "jpeg"])
 
-        response = client.models.generate_content(
-            model=MODEL,
-            contents=prompt
-        )
+if uploaded_file is not None:
+    # Open the uploaded image
+    img = Image.open(uploaded_file)
+    # Extract text from the image
+    text = pytesseract.image_to_string(img)
 
-        answer = response.text.strip()
-        if not answer:
-            st.write(f'"{text}" is not recognized as a common teen slang or acronym.')
-        else:
-            st.write(f"Answer to your question: {answer}")
+    # Gemini setup
+    API_KEY = "AIzaSyBdwZKn4TF5AKuqfNpFUJlVAVkDXdB-RBI"
+    MODEL = "gemini-2.5-flash"
+    client = genai.Client(api_key=API_KEY)
 
-    except Exception as e:
-        st.error(f"Server down or API error: {e}")
-ask_gemini()
+    def ask_gemini():
+        try:
+            prompt = (
+                "You are a helpful assistant which helps people respond to certain scenarios and changes the tone according to the severity of the scenario. "
+                f"Text: {text}\n Provide a possible response to this scenario. Use slangs and acronyms where necessary."
+            )
+
+            response = client.models.generate_content(
+                model=MODEL,
+                contents=[prompt]  # must be a list!
+            )
+
+            answer = response.text.strip()
+            if not answer:
+                st.write(f'"{text}" is not recognized as a common teen slang or acronym.')
+            else:
+                st.write(f"Teen-style response: {answer}")
+
+        except Exception as e:
+            st.error(f"Server down or API error: {e}")
+
+    # Call Gemini
+    ask_gemini()
