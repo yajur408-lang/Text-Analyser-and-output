@@ -135,3 +135,7 @@ The pipeline follows sklearn best practices:
 
 This project is for educational purposes.
 
+Before using pyteressact please download it from
+https://pypi.org/project/pytesseract/
+https://tesseract-ocr.github.io/tessdoc/Downloads.html
+
