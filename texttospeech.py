@@ -1,19 +1,24 @@
-import pyttsx3
 import streamlit as st
-engine = pyttsx3.init()
-st.title("Text to Speech Converter")
-# Set properties (optional)
-rate=120 # Speed percent (can go over 100)
-engine.setProperty('rate', rate)  # Speed (words per minute)
-evolume=0.7 # Volume (0.0 to 1.0)
-engine.setProperty('volume', evolume)  #set according to https://www.atia.org/wp-content/uploads/2024/04/ATOB_V18.pdf?utm_source=chatgpt.com
+from gtts import gTTS
+from io import BytesIO
 
+st.title("Text-to-Speech Converter")
 
-# Input text
-text = st.text_input("Enter text to speak: ")
-stop=st.button("Stop Speaking")
-if stop:
-    engine.stop()
-# Speak
-engine.say(text)
-engine.runAndWait()
+# Text input
+text = st.text_area("Enter text to convert to speech:")
+
+# Button to generate speech
+if st.button("Play Speech"):
+    if text.strip() != "":
+        # Convert text to speech and store in memory
+        tts = gTTS(text=text, lang='en', slow=False)
+        audio_bytes = BytesIO()
+        tts.write_to_fp(audio_bytes)
+        audio_bytes.seek(0)  # Move to the start of the BytesIO buffer
+        
+        # Play the audio in Streamlit
+        st.audio(audio_bytes, format='audio/mp3')
+    else:
+        st.error("Please enter some text to convert.")
+
+c
