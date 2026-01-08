@@ -32,9 +32,7 @@ if uploaded_file is not None:
         with st.spinner("Generating professional finance response..."):
             try:
                 prompt = (
-                    "You are a highly professional finance expert. "
-                    "Provide a clear, concise, and professional response or advice based on the following text. "
-                    "Text: "
+                    ": "
                     f"{text}"
                 )
 
