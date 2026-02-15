@@ -139,3 +139,6 @@ Before using pyteressact please download it from
 https://pypi.org/project/pytesseract/
 https://tesseract-ocr.github.io/tessdoc/Downloads.html
 
+Coded by: Yajur and Nivesh
+
+
